@@ -4,7 +4,7 @@ use strict;
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
-use feature qw(say);
+use feature qw/ say /;
 
 my $start_run = time();
 
