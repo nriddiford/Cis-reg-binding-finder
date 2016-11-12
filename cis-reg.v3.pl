@@ -99,19 +99,19 @@ while(my $seq = $seqio->next_seq) {
 }
 
 sub read_matrix {
-		while(<$matrix>){
-			my @parts = split;
-			if ($. == 1){
-				push @consensus, @parts;
+	while(<$matrix>){
+		my @parts = split;
+		
+		if ($. == 1){
+			push @consensus, @parts;
+		}
+		else {
+			for (my $cell = 0; $cell < $#parts; $cell++) {
+				$score_lookup{$cell}{$parts[0]} = $parts[$cell+1];
 			}
-			else {
-				for (my $cell = 0; $cell < $#parts; $cell++) {
-					$score_lookup{$cell}{$parts[0]} = $parts[$cell+1];
-				}
-			}
-
 		}
 	}
+}
 	
 
 sub usage {
