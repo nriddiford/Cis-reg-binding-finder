@@ -11,12 +11,12 @@ use Bio::SeqIO;
 
 my $genome_file = 'in.fa';
 my $matrix_file = 'matrix_for_Dros_so.txt';
-my $out_file = 'SO_doms.gff3';
+my $out_file = 'O_doms';
 my $debug;
 my $quiet;
 my $help;
 
-GetOptions( 'genome=s'      =>   \$genome_file,
+GetOptions( 'genome=s'     =>   \$genome_file,
 		   	'matrix=s'     =>    \$matrix_file,
 		   	'outfile=s'    =>	 \$out_file,
 		   	'help'         =>    \$help,
@@ -45,7 +45,7 @@ my $binding_dom = scalar(@consensus);
 my %candidates;
 my %data;
 
-open my $out, '>', $out_file or die $!;
+open my $out, '>', "$out_file\.gff3" or die $!;
 
 print $out "##gff-version 3\n";
 print $out "#track name=\"SO binding domains\" color=#FFBB33 gffTags=on\n";
