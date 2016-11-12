@@ -11,7 +11,6 @@ use Bio::SeqIO;
 
 my $genome_file = 'in.fa';
 my $matrix_file = 'matrix_for_Dros_so.txt';
-my $block_size = 10;
 my $out_file = 'SO_doms.gff3';
 my $debug;
 my $quiet;
@@ -19,7 +18,6 @@ my $help;
 
 GetOptions( 'genome=s'      =>   \$genome_file,
 		   	'matrix=s'     =>    \$matrix_file,
-		   	'block-size=i' =>    \$block_size,
 		   	'outfile=s'    =>	 \$out_file,
 		   	'help'         =>    \$help,
 		   	'quiet'        =>    \$quiet,
@@ -52,130 +50,53 @@ open my $out, '>', $out_file or die $!;
 print $out "##gff-version 3\n";
 print $out "#track name=\"SO binding domains\" color=#FFBB33 gffTags=on\n";
 
+my $red = '#FF5733';
+my $orange = '#FFC300';
+
 while(my $seq = $seqio->next_seq) {
 	my $nucs = $seq->seq;
 	my $chr = $seq->id;
 	my $chr_length =$seq->length; # 1 based length of chromosome
+	say "Processing chromosome $chr...";
+	my $dom_count = 0;
 
 	for my $i ( 0 .. $chr_length - $binding_dom ) {
- 	     my $kmer = substr($nucs, $i, $binding_dom);
+		my $kmer = substr($nucs, $i, $binding_dom);
 		 
-		 my $start = $i + 1;
-		 my $stop = $i + 6;
+		# Make 1 based for gff3
+		my $start = $i + 1;
+		my $stop = $i + 6;
  	    
 		$data{$kmer}++; # populate hash with frequency of k-mer
 		 		 
-		 my @nucs = split '', $kmer;
-		 my $nuc_score = 0;
+		my @nucs = split '', $kmer;
+		my $nuc_score = 0;
 		 
 		 # iterate over each nucleotide and sum score from lookup kmer
-		 	for ( 0 .. $#nucs ){
-		 		if ( exists $score_lookup{$_}{$nucs[$_]} ){
-		 			$nuc_score += $score_lookup{$_}{$nucs[$_]};
-		  		}
+		for ( 0 .. $#nucs ){
+			if ( exists $score_lookup{$_}{$nucs[$_]} ){
+		 		$nuc_score += $score_lookup{$_}{$nucs[$_]};
 		  	}
+		}
 			
-			# annotate hits with score >= 10
-			if ( $nuc_score >= 20 ){ # need to adjust this section so that the score is automatically calculated depending on the number of nucs in consensus
-				my ($sc) = (($nuc_score/24));
-
-				 # "$kmer = $nuc_score  HIT!  $sc score against consensus\n" if $debug;
-				my $gff_line = join("\t", "$chr", ".", "region", "$start", "$stop", ".", "+", ".", "Name=$nuc_score;color=#FFBB33");
-				print $out "$gff_line\n";
+			# annotate hits with high score
+			# Need to include some with less than perfect scores...
+		if ( $nuc_score >= 20 ){ # need to adjust this section so that the score is automatically calculated depending on the number of nucs in consensus
+			my ($sc) = (($nuc_score/24));
+			print "$kmer = $nuc_score  HIT!  $sc score against consensus\n" if $debug;
+			$dom_count++;
+			# Can't get this to work as a ternery!!
+			my $colour = $orange;
+			if ($nuc_score > 20) { $colour = $red }
 				
-				# X	.	region	3134870	3172221	.	+	.	Name=Notch;color=#FFBB33
-				
-				# join("\t", $chr \. region);#$i\t$stop\t\.\t\+\t\.\tName=SO_\$nuc_score;color=#FFBB33;
-				$candidates{$kmer}{$nuc_score}++;
+			my $gff_line = join("\t", "$chr", ".", "region", "$start", "$stop", ".", "+", ".", "Name=$nuc_score;colour=$colour");
+			print $out "$gff_line\n";
+			$candidates{$kmer}{$nuc_score}++;
 			}
-
-			else {
-				# print "$kmer = $nuc_score\n";
-				# print $out "$block\n";
-			}
-					
+						
  	}
-	
-
+	say "Found $dom_count SO binding domains on chromosome $chr";
 }
-
-
-
-
-
- 
-
-
-
-
-
-
-# Read into $block 1MB chunks of data from $in
-# read FILEHANDLE, SCALAR, LENGTH, OFFSET
-# while ( my $nucs = sysread $genome, $block, $block_size, $length ) {
-#
-# 	if ($debug){
-# 		print "nucs = $nucs\n";
-# 		print "block = $block\n";
-# 		print "block size = $block_size\n";
-# 		print "length = $length\n";
-# 	}
-# 	$length += $nucs;
-#
-# 	$block_count++;
-#
-# 	# print "\nBlock: $block_count\nBlock sequence: $block\n";
-#
-# 	for my $offset ( 0 .. $length - $binding_dom ) {
-# 		my $kmer = substr $block, $offset, $binding_dom;
-#
-# 		my @nucs = split '', $kmer;
-# 		my $nuc_score = 0;
-#
-# 		# iterate over each nucleotide and sum score from lookup kmer
-# 		for ( 0 .. $#nucs ){
-# 			if ( exists $score_lookup{$_}{$nucs[$_]} ){
-# 				$nuc_score += $score_lookup{$_}{$nucs[$_]};
-# 			}
-# 		}
-#
-# 		# annotate hits with score >= 10
-# 		if ( $nuc_score >= 22 ){ # need to adjust this section so that the score is automaticall calculated depending on the number of nucs in consensus
-# 			my ($sc) = (($nuc_score/24));
-#
-# 			print "$kmer = $nuc_score  HIT!  $sc score against consensus\n" unless $quiet;
-# 			print $out "||Six1||$kmer=$sc|" unless $quiet;
-#
-# 			$candidates{$kmer}{$nuc_score}++;
-# 		}
-#
-# 		else {
-# 			# print "$kmer = $nuc_score\n";
-# 			# print $out "$block\n";
-# 		}
-#
-#     }
-# 	my $re_print = $block;
-#
-# 	$re_print = substr $block, ($binding_dom-1) unless $block_count == 1; # this ensures that the blocks are non-overlapping
-#
-# 	print $out "$re_print" unless $quiet;
-#
-#     $block = substr $block, - ($binding_dom-1);
-# 	$length = length $block;
-# }
-# my ($seq) = join('', @consensus);
-# say "Top matches to $seq" unless $quiet;
-#
-# for my $match (keys %candidates ){
-# 	for my $score ( sort { $candidates{$b} <=> $candidates{$a} } keys $candidates{$match} ){
-# 		print "$match, $score = $candidates{$match}{$score}\n" unless $quiet;
-# 	}
-# }
-#
-# my $end_run = time();
-# my $run_time = $end_run - $start_run;
-# print "Script ran in $run_time seconds\n";
 
 sub read_matrix {
 		while(<$matrix>){
@@ -198,7 +119,6 @@ sub usage {
     say "Usage: $0 [options]";
 	say "--genome = genome fasta file";
 	say "--matrix = score matrx file";
-	say "--block-size = size of genome chuck to process in loop. Default = $block_size";
 	say "--outfile = specify name of output file";
 	say "--help";
 	say "--quiet";
