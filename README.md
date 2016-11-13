@@ -1,14 +1,14 @@
 # Cis-reg: Find transcription factor binding sites in genome 
 
 This is an ongoing project of mine that will:
-* Read in a user-defined score matrix for a transcription factors binding sequence
+* Read in a user-defined score matrix for the cis-regulatory element bound by a particular transcription factor
 * Read in a genome ~~in blocks~~
-* Find all potential binding domains matching the score matrix
+* Find all potential binding domains in the genome for given TF (above a score threshold)
 * Annotate these into a .gff file, coloured by score
 
 Future things I'd like to add: 
-* Benchmarking to inform best method to process chromosomes (i.e. as blocks or string) 
-* Performing a clustering analysis to identify regions enriched for a TFs binding domain
+* Benchmarking to inform best method to process chromosomes (i.e. as blocks or strings) 
+* Performing a clustering analysis to identify regions enriched for a TF's binding domain
 * Run and cluster for several TFs
 * Make predictions based on clustering/score on what regions in genome likely regulated by TF(s)
 
