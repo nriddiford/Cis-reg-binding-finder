@@ -60,7 +60,8 @@ while(my $seq = $seqio->next_seq) {
 	my $chr = $seq->id;
 	my $chr_length =$seq->length; # 1 based length of chromosome
 	say "Processing chromosome $chr...";
-	my $dom_count = 0;
+
+        my $dom_count = 0;
 
 	for my $i ( 0 .. $chr_length - $binding_dom ) {
 		my $kmer = substr($nucs, $i, $binding_dom);
