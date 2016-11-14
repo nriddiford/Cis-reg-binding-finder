@@ -53,6 +53,8 @@ print $out "#track name=\"SO binding domains\" color=#FFBB33 gffTags=on\n";
 my $red = '#FF5733';
 my $orange = '#FFC300';
 
+# How does this read-in stragegy cover line-wrapped instances? 
+# Does it catch elements spanning two lines? 
 while(my $seq = $seqio->next_seq) {
 	my $nucs = $seq->seq;
 	my $chr = $seq->id;
