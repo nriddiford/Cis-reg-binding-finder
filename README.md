@@ -7,6 +7,7 @@ This is an ongoing project of mine that will:
 * Annotate these into a .gff file, coloured by score
 
 Future things I'd like to add: 
+* The ability to annotate both strands of DNA
 * Benchmarking to inform best method to process chromosomes (i.e. as blocks or strings) 
 * Performing a clustering analysis to identify regions enriched for a TF's binding domain
 * Run and cluster for several TFs
