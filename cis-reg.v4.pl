@@ -38,6 +38,8 @@ say "Reading matrix file... '$matrix_file'";
 open my $matrix, '<', $matrix_file or die $!;
 read_matrix($matrix);
 
+say "Writing output to '$out_file'";
+
 my (@consensus, %score_lookup);
 
 my $binding_dom = scalar(@consensus);
@@ -60,7 +62,7 @@ while(my $seq = $seqio->next_seq) {
 	my $nucs = $seq->seq;
 	my $chr = $seq->id;
 	my $chr_length =$seq->length; # 1 based length of chromosome
-	say "Processing chromosome '$chr'...";
+	say "Processing '$chr'...";
 	my $dom_count = 0;
 
 	for my $i ( 0 .. $chr_length - $binding_dom ) {
@@ -101,7 +103,7 @@ while(my $seq = $seqio->next_seq) {
 			}
 						
  	}
-	say "Found $dom_count SO binding domains on chromosome $chr";
+	say "Found $dom_count SO binding domains on '$chr'";
 }
 
 sub read_matrix {
