@@ -53,7 +53,7 @@ my %data;
 open my $out, '>', "$out_file\.gff3" or die $!;
 
 print $out "##gff-version 3\n";
-print $out "#track name=\"SO binding domains\" color=#FFBB33 gffTags=on\n";
+print $out "#track name=\"$out_file\" color=#FFBB33 gffTags=on\n";
 
 # Add more colours for longer elements
 my $dark_red = '#900C3F';
