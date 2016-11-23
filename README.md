@@ -18,14 +18,16 @@ These are well descibed in the program - run with the `-h` flag to see the follo
 
 ```{perl}
 *************** Cis-reg ***************
-Usage: cis-reg.v3.pl [options]
+Usage: cis-reg.v4.3.pl [options]
 --genome = genome fasta file
 --matrix = score matrx file
+--score  = score cuttoff for match. 1 = 100% match - not recommended to set score < 0.75
 --outfile = specify name of output file
 --help
 --quiet
 --debug
 Nick Riddiford 2016
+
 ```
 
 Running as-is, will take in a test genome file and score matrix, and output a `.gff3` file that can be read into IGV.
