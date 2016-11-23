@@ -16,7 +16,7 @@ Future things I'd like to add:
 ## Options
 These are well descibed in the program - run with the `-h` flag to see the following usage message:
 
-```{perl}
+```
 *************** Cis-reg ***************
 Usage: cis-reg.v4.3.pl [options]
 --genome = genome fasta file
@@ -27,7 +27,6 @@ Usage: cis-reg.v4.3.pl [options]
 --quiet
 --debug
 Nick Riddiford 2016
-
 ```
 
 Running as-is, will take in a test genome file and score matrix, and output a `.gff3` file that can be read into IGV.
