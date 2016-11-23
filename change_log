@@ -1,0 +1,8 @@
+v4.3 : 23/11/16
+- Change %data to %kmer_freq
+- Change $bindin_dom to $domain_length
+- Commented out $kmer_freq{$kmer}++;
+- Add score flag -s
+- Change score filtering to >= $threshold (to allow 1 to be set)
+- Update usage accordingly
+  
